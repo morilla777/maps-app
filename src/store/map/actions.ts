@@ -1,10 +1,10 @@
 
 import { ActionTree } from 'vuex';
-import { ExampleStateInterface } from './state';
+import { MapState } from './state';
 import { StateInterface } from '../index';
 
 
-const actions: ActionTree<ExampleStateInterface, StateInterface> = {
+const actions: ActionTree<MapState, StateInterface> = {
     getInitialLocation( { commit } ) {
         navigator.geolocation.getCurrentPosition(
             ( { coords }) => commit('setLngLat', {lng: coords.longitude, lat: coords.latitude }),

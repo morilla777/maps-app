@@ -7,7 +7,9 @@ import { StateInterface } from '../index';
 const actions: ActionTree<PlacesState, StateInterface> = {
     getInitialLocation( { commit } ) {
         navigator.geolocation.getCurrentPosition(
-            ( { coords }) => commit('setLngLat', { lng: coords.longitude, lat: coords.latitude}),
+            ( { coords }) => {
+                commit('setLngLat', coords );
+            },
             ( err ) => {
                 console.error(err)
                 throw new Error('No geolocation :-( ')

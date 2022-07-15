@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { usePlacesStore } from '@/composables/usePlacesStore';
+import { usePlacesStore } from '@/composables';
 import { defineComponent } from 'vue';
 
 import MapView from '@/components/mapview/MapView.vue';

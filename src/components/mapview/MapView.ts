@@ -1,5 +1,5 @@
 import { defineComponent, ref, onMounted, watch } from 'vue';
-import { usePlacesStore } from '../../composables/usePlacesStore';
+import { usePlacesStore, useMapStore } from '@/composables';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css'
 
@@ -9,16 +9,23 @@ export default defineComponent({
 
     
     const { userLocation, isUserLocationReady } = usePlacesStore();
+    const { setMap } = useMapStore();
 
     const mapContainer = ref<HTMLDivElement>();
 
-    onMounted( () => {
+    const initMap = async ()  => {
+
+      if( !mapContainer.value ) throw new Error('Div Element no existe');
+      if( !userLocation.value ) throw new Error('User Location no existe'); 
+
+      await Promise.resolve();
+
       const map = new mapboxgl.Map({
         container: mapContainer.value!, // container ID
         style: 'mapbox://styles/mapbox/streets-v11', // style URL
         //style: 'mapbox://styles/mapbox/satellite-v9', // style URL
         center: userLocation.value, // starting position [lng, lat]
-        zoom: 14, // starting zoom,
+        zoom: 15, // starting zoom,
         projection: 'globe'
         } as any);
         
@@ -31,10 +38,37 @@ export default defineComponent({
           'star-intensity': 0.6
         } as any); // Set the default atmosphere style
         });
+
+        const myLocationPopup = new mapboxgl.Popup({ offset: [0,-25] })
+          .setLngLat( userLocation.value )
+          .setHTML(`
+            <h4>Aquí estoy</h4>
+            <p>Actualmente en San Francisco de Mostazal</p>
+            <p>${ userLocation.value }</p>
+          `);
+
+        const myLocationMarker = new mapboxgl.Marker();
+
+          myLocationMarker.setLngLat( userLocation.value )
+          .setPopup( myLocationPopup )
+          .addTo( map );
+
+
+          setMap( map )
+    }
+
+    onMounted( () => {
+
+      if( isUserLocationReady.value )
+        return initMap();
+     
     });
 
+    watch ( isUserLocationReady, ( newVal ) => {
+      if ( isUserLocationReady.value ) initMap();
+    })
+
     return{
-        userLocation,
         isUserLocationReady,
         mapContainer
     }

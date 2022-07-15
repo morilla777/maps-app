@@ -9,7 +9,7 @@ export const usePlacesStore = () => {
     const store = useStore<StateInterface>();
 
     onMounted( () => {
-        if( store.getters['places/isUserLocationReady']){
+        if( !store.getters['places/isUserLocationReady']){
             store.dispatch('places/getInitialLocation');
         }
     });
