@@ -1,12 +1,13 @@
 import { MutationTree } from 'vuex';
 import { PlacesState } from './state';
+import { Feature } from '@/interfaces/places';
 
 
 const mutation: MutationTree<PlacesState> = {
     setLngLat(  state: PlacesState, {longitude, latitude}: { longitude: number, latitude: number} ) {
         state.userLocation =  [longitude, latitude];
         state.isLoading = false;
-    }
+    },
 
     /*
     setLngLat(  state: PlacesState, {lng, lat}: { lng: number, lat: number } ) {
@@ -14,6 +15,14 @@ const mutation: MutationTree<PlacesState> = {
         state.isLoading = false;
     }
     */
+   setIsLoadingPlaces( state ){
+     state.isLoadingPlaces = true;
+   },
+
+   setPlaces( state, places: Feature[] ){
+        state.places = places;
+        state.isLoadingPlaces = false;
+   }
 }
 
 

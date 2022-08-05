@@ -21,13 +21,13 @@ export default defineComponent({
       await Promise.resolve();
 
       const map = new mapboxgl.Map({
-        container: mapContainer.value!, // container ID
+        container: mapContainer.value?mapContainer.value:'mapContainer', // container ID
         style: 'mapbox://styles/mapbox/streets-v11', // style URL
         //style: 'mapbox://styles/mapbox/satellite-v9', // style URL
         center: userLocation.value, // starting position [lng, lat]
         zoom: 15, // starting zoom,
-        projection: 'globe'
-        } as any);
+        projection: {name: 'globe'}
+        });
         
         map.on('style.load', () => {
         map.setFog({
@@ -36,7 +36,7 @@ export default defineComponent({
           'horizon-blend': 0.02,
           'space-color': 'rgb(11, 11, 25)',
           'star-intensity': 0.6
-        } as any); // Set the default atmosphere style
+        } as mapboxgl.Fog); // Set the default atmosphere style
         });
 
         const myLocationPopup = new mapboxgl.Popup({ offset: [0,-25] })
@@ -64,7 +64,7 @@ export default defineComponent({
      
     });
 
-    watch ( isUserLocationReady, ( newVal ) => {
+    watch ( isUserLocationReady, ( ) => {
       if ( isUserLocationReady.value ) initMap();
     })
 
